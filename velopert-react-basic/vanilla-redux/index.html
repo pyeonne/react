@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Redux basic example</title>
+        <link rel="stylesheet" href="index.css" />
+        <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
+    </head>
+    <body>
+        <div class="toggle"></div>
+        <hr />
+        <h1>0</h1>
+        <button id="increase">+1</button>
+        <button id="decrease">-1</button>
+        <script>
+            const divToggle = document.querySelector('.toggle');
+            const counter = document.querySelector('h1');
+            const btnIncrease = document.querySelector('#increase');
+            const btnDecrease = document.querySelector('#decrease');
+
+            const TOGGLE_SWITCH = 'TOGGLE_SWITCH';
+            const INCREASE = 'INCREASE';
+            const DECREASE = 'DECREASE';
+
+            const initialState = {
+                toggle: false,
+                counter: 0,
+            };
+
+            function reducer(state = initialState, action) {
+                switch (action.type) {
+                    case TOGGLE_SWITCH:
+                        return {
+                            ...state,
+                            toggle: !state.toggle,
+                        };
+                    case INCREASE:
+                        return {
+                            ...state,
+                            counter: state.counter + 1,
+                        };
+                    case DECREASE:
+                        return {
+                            ...state,
+                            counter: state.counter - 1,
+                        };
+
+                    default:
+                        return state;
+                }
+            }
+
+            const store = Redux.createStore(reducer);
+
+            function render() {
+                const state = store.getState(); // 현재 상태를 불러옴
+                // 토글 처리
+                if (state.toggle) {
+                    divToggle.classList.add('active');
+                } else {
+                    divToggle.classList.remove('active');
+                }
+                // 카운터 처리
+                counter.innerHTML = state.counter;
+            }
+
+            render();
+            store.subscribe(render);
+
+            divToggle.addEventListener('click', function () {
+                store.dispatch({ type: TOGGLE_SWITCH });
+            });
+
+            btnIncrease.addEventListener('click', function () {
+                store.dispatch({ type: INCREASE });
+            });
+
+            btnDecrease.addEventListener('click', function () {
+                store.dispatch({ type: DECREASE });
+            });
+        </script>
+    </body>
+</html>
